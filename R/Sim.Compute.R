@@ -30,7 +30,7 @@
 #' @examples
 #' data("Initialise_df")
 #' data("CarryingK_vec")
-#' data("Network_igraph")
+#' data("Network_mat")
 #' data("Env_mat")
 #'
 #' SimResult <- Sim.Compute(
@@ -48,7 +48,7 @@
 #'
 #'   # Interaction parameters
 #'   interac.maxdis = 0.5,
-#'   interac.mat = Network_igraph,
+#'   interac.mat = Network_mat,
 #'   interac.scale = 1,
 #'
 #'   # Simulation parameters
@@ -61,24 +61,25 @@
 #'
 #' @export
 Sim.Compute <- function(
-    d0 = 0.4,
-    b0 = 0.6,
-    k_vec,
-    ID_df,
-    env.xy, # space matrix
-    env.sd = 2.5,
-    mig.sd = 0.2,
-    mig.top = 0.05,
-    mig.trunc = 1,
-    interac.maxdis = 0.5,
-    interac.mat,
-    interac.scale = 1,
-    Sim.t.max = 10,
-    Sim.t.inter = 0.1,
-    seed = 42,
-    verbose = TRUE, # whether to print progress in time as current time
-    RunName = "",
-    writeFile = TRUE) {
+  d0 = 0.4,
+  b0 = 0.6,
+  k_vec,
+  ID_df,
+  env.xy, # space matrix
+  env.sd = 2.5,
+  mig.sd = 0.2,
+  mig.top = 0.05,
+  mig.trunc = 1,
+  interac.maxdis = 0.5,
+  interac.mat,
+  interac.scale = 1,
+  Sim.t.max = 10,
+  Sim.t.inter = 0.1,
+  seed = 42,
+  verbose = TRUE, # whether to print progress in time as current time
+  RunName = "",
+  writeFile = TRUE
+) {
   call_info <- match.call()
   set.seed(seed)
 

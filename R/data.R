@@ -26,9 +26,9 @@
 # #'
 # #' Random network used to inform simulation framework.
 # #'
-# #' @format ## `Network_igraph`
-# #' igraph object containing 10 nodes and 23 links.
-# "Network_igraph"
+# #' @format ## `Network_mat`
+# #' Matrix object containing 10 nodes and 23 links.
+# "Network_mat"
 
 # #' Environmental Matrix
 # #'
@@ -50,6 +50,6 @@
 # #'
 # #' Random network treated as though it was an inferred network for package documentation purposes.
 # #'
-# #' @format ## `Inferred_igraph`
-# #' igraph object containing 10 nodes and 23 links.
-# "Inferred_igraph"
+# #' @format ## `Inferred_mat`
+# #' Matrix object containing 10 nodes and 23 links.
+# "Inferred_mat"

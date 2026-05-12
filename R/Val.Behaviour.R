@@ -1,7 +1,7 @@
 #' Network Inference Behaviour Validation
-#' 
+#'
 #' Logistic Bayesian models of network inference approach behaviour. Runs models per link sign (positive, negative, absent) to identify the effects of underlying link magnitude and environmental niche preference differences.
-#' 
+#'
 #' @param model_df A data frame tallying comparisons of inferred and underlying true networks. Rows index pairwise links. Consists of the following columns:
 #'  - Magnitude ... Numeric. Absolute strength/magnitude of link in the true network.
 #'  - SignTrue ... Numeric - -1, 0, or 1. Sign of link in true network. 0 denotes absence of a link.
@@ -16,44 +16,32 @@
 #' @param nChains Integer. Number of markov chains to run.
 #' @param nCores Integer. Number of cores to utilise.
 #' @param seed Numeric. Seed for random processes.
-#' 
+#'
 #' @return A list with three elements:
 #'  - Positive ... brmsfit object describing the Bayesian model run to identify either inference or detection behaviour for positive inferred links
 #'  - Negative ... brmsfit object describing the Bayesian model run to identify either inference or detection behaviour for negative inferred links
 #'  - Absent ... brmsfit object describing the Bayesian model run to identify either inference or detection behaviour for absent inferred links
-#' 
+#'
 #' @author Erik Kusch, Natural History Museum, University of Oslo, Norway.
-#' 
+#'
 #' @importFrom brms brm
 #' @importFrom brms bernoulli
-#' 
+#'
 #' @examples
 #' ## loading data ---
-#' data("Network_igraph")
-#' data("Inferred_igraph")
+#' data("Network_mat")
+#' data("Inferred_mat")
 #' data("Niches_vec")
-#' ## Reformatting data ---
-#' ### Make igraphs into matrices
-#' matrices_ls <- lapply(list(Network_igraph, Inferred_igraph), FUN = function(NetworkI){
-#'   if(is.null(igraph::V(NetworkI)$names)){
-#'     igraph::V(NetworkI)$names <- paste0("Sp_", igraph::V(NetworkI))
-#'   }
-#'   mat <- as.matrix(igraph::as_adjacency_matrix(NetworkI, attr = "weight"))
-#'   colnames(mat) <- rownames(mat) <- igraph::V(NetworkI)$names
-#'   diag(mat) <- NA
-#'   if(!igraph::is_directed(NetworkI)){
-#'     mat[lower.tri(mat) ] <- NA
-#'   }
-#'   mat
-#' })
-#' 
+#'
+#' matrices_ls <- list(True = Network_mat, Inferred = Inferred_mat)
+#'
 #' ### Calculate environmental differences
 #' SPTrait_df <- data.frame(Niches_vec)
 #' SPTrait_df$Species <- rownames(SPTrait_df)
 #' colnames(SPTrait_df) <- c("Trait", "Species")
-#' SPTrait_mat <- abs(outer(SPTrait_df$Trait, SPTrait_df$Trait, '-'))
+#' SPTrait_mat <- abs(outer(SPTrait_df$Trait, SPTrait_df$Trait, "-"))
 #' colnames(SPTrait_mat) <- rownames(SPTrait_mat) <- colnames(SPTrait_df$Species)
-#' 
+#'
 #' ## Collate data frame for behaviour analysis ---
 #' model_df <- data.frame(
 #'   Magnitude = abs(as.vector(matrices_ls[[1]])),
@@ -66,84 +54,95 @@
 #' (Detection <- Val.Behaviour(model_df, mode = "Detection"))
 #' (Inference <- Val.Behaviour(model_df, mode = "Inference"))
 #' }
-#' 
+#'
 #' @export
-Val.Behaviour <- function(model_df, mode = "Detection", nWarmup = 3e3, nSamples = 1e4, nChains = 4, nCores = 4, seed = 42){
-  
+Val.Behaviour <- function(model_df, mode = "Detection", nWarmup = 3e3, nSamples = 1e4, nChains = 4, nCores = 4, seed = 42) {
   model_df$CorrectPos <- model_df$SignInferred + model_df$SignTrue == 2
   model_df$CorrectNeg <- model_df$SignInferred + model_df$SignTrue == -2
   model_df$CorrectAbs <- (model_df$SignInferred == 0) + (model_df$SignTrue == 0) == 2
-  
-  if(mode == "Detection"){
-    Bayes_Model_Positive <- brm(formula = CorrectPos ~ Magnitude * EnvDiff,
-                                data = model_df,
-                                family = bernoulli(link = "logit"),
-                                warmup = nWarmup,
-                                iter = nSamples,
-                                chains = nChains,
-                                cores = nCores,
-                                seed = seed)
-    
-    Bayes_Model_Negative <- brms::brm(formula = CorrectNeg ~ Magnitude * EnvDiff,
-                                      data = model_df,
-                                      family = bernoulli(link = "logit"),
-                                      warmup = nWarmup,
-                                      iter = nSamples,
-                                      chains = nChains,
-                                      cores = nCores,
-                                      seed = seed)
-    
-    Bayes_Model_Absent <- brms::brm(formula = CorrectAbs ~ Magnitude * EnvDiff,
-                                      data = model_df,
-                                      family = bernoulli(link = "logit"),
-                                      warmup = nWarmup,
-                                      iter = nSamples,
-                                      chains = nChains,
-                                      cores = nCores,
-                                      seed = seed)
+
+  if (mode == "Detection") {
+    Bayes_Model_Positive <- brm(
+      formula = CorrectPos ~ Magnitude * EnvDiff,
+      data = model_df,
+      family = bernoulli(link = "logit"),
+      warmup = nWarmup,
+      iter = nSamples,
+      chains = nChains,
+      cores = nCores,
+      seed = seed
+    )
+
+    Bayes_Model_Negative <- brms::brm(
+      formula = CorrectNeg ~ Magnitude * EnvDiff,
+      data = model_df,
+      family = bernoulli(link = "logit"),
+      warmup = nWarmup,
+      iter = nSamples,
+      chains = nChains,
+      cores = nCores,
+      seed = seed
+    )
+
+    Bayes_Model_Absent <- brms::brm(
+      formula = CorrectAbs ~ Magnitude * EnvDiff,
+      data = model_df,
+      family = bernoulli(link = "logit"),
+      warmup = nWarmup,
+      iter = nSamples,
+      chains = nChains,
+      cores = nCores,
+      seed = seed
+    )
   }
-  if(mode == "Inference"){
+  if (mode == "Inference") {
     run_df <- model_df
     run_df$SignInferred[run_df$SignInferred != 1] <- 0
-    Bayes_Model_Positive <- brm(formula = SignInferred ~ Magnitude * EnvDiff,
-                                data = run_df,
-                                family = bernoulli(link = "logit"),
-                                warmup = nWarmup,
-                                iter = nSamples,
-                                chains = nChains,
-                                cores = nCores,
-                                seed = seed)
-    
+    Bayes_Model_Positive <- brm(
+      formula = SignInferred ~ Magnitude * EnvDiff,
+      data = run_df,
+      family = bernoulli(link = "logit"),
+      warmup = nWarmup,
+      iter = nSamples,
+      chains = nChains,
+      cores = nCores,
+      seed = seed
+    )
+
     run_df <- model_df
     run_df$SignInferred[run_df$SignInferred != -1] <- 0
     run_df$SignInferred <- abs(run_df$SignInferred)
-    Bayes_Model_Negative <- brm(formula = SignInferred ~ Magnitude * EnvDiff,
-                                data = run_df,
-                                family = bernoulli(link = "logit"),
-                                warmup = nWarmup,
-                                iter = nSamples,
-                                chains = nChains,
-                                cores = nCores,
-                                seed = seed)
-    
+    Bayes_Model_Negative <- brm(
+      formula = SignInferred ~ Magnitude * EnvDiff,
+      data = run_df,
+      family = bernoulli(link = "logit"),
+      warmup = nWarmup,
+      iter = nSamples,
+      chains = nChains,
+      cores = nCores,
+      seed = seed
+    )
+
     run_df <- model_df
     run_df$SignInferred[run_df$SignInferred != 0] <- 99
     run_df$SignInferred[run_df$SignInferred == 0] <- 1
     run_df$SignInferred[run_df$SignInferred == 99] <- 0
-    Bayes_Model_Absent <- brm(formula = SignInferred ~ Magnitude * EnvDiff,
-                              data = run_df,
-                              family = bernoulli(link = "logit"),
-                              warmup = nWarmup,
-                              iter = nSamples,
-                              chains = nChains,
-                              cores = 1,
-                              seed = 42)
+    Bayes_Model_Absent <- brm(
+      formula = SignInferred ~ Magnitude * EnvDiff,
+      data = run_df,
+      family = bernoulli(link = "logit"),
+      warmup = nWarmup,
+      iter = nSamples,
+      chains = nChains,
+      cores = 1,
+      seed = 42
+    )
   }
-  
+
   Return_ls <- list(
     Positive = Bayes_Model_Positive,
     Negative = Bayes_Model_Negative,
     Absent = Bayes_Model_Absent
-    )
+  )
   return(Return_ls)
 }

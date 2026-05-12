@@ -21,20 +21,14 @@
 #' @author Erik Kusch, Natural History Museum, University of Oslo, Norway.
 #'
 #' @examples
-#' data("Network_igraph")
-#' data("Inferred_igraph")
-#' Val.ErrorRates(Network1 = Network_igraph, Network2 = Inferred_igraph)
+#' data("Network_mat")
+#' data("Inferred_mat")
+#' Val.ErrorRates(Network1 = Network_mat, Network2 = Inferred_mat)
 #'
 #' @export
 Val.ErrorRates <- function(Network1, Network2, NetworkType = "Association") {
   ## matrices
   matrices_ls <- lapply(list(Network1, Network2), FUN = function(mat) {
-    # if(is.null(igraph::V(NetworkI)$names)){
-    #   igraph::V(NetworkI)$names <- paste0("Sp_", igraph::V(NetworkI))
-    # }
-    # mat <- as.matrix(as_adjacency_matrix(NetworkI, attr = "weight"))
-    # colnames(mat) <- rownames(mat) <- igraph::V(NetworkI)$names
-    # diag(mat) <- NA
     if (NetworkType == "Association") {
       mat[lower.tri(mat)] <- NA
     }
@@ -78,5 +72,6 @@ Val.ErrorRates <- function(Network1, Network2, NetworkType = "Association") {
     ),
     Metric = c("TP", "TN", "TA", "FP", "FN", "FA", "MP", "MN", "MA")
   )
+  errorrates_df$Values <- errorrates_df$Values * 100
   return(errorrates_df)
 }

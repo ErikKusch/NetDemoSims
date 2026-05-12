@@ -15,8 +15,8 @@
 #'
 #' @examples
 #' data("Niches_vec")
-#' data("Network_igraph")
-#' Val.Realise(Network_igraph = Network_igraph, Trait_means = Niches_vec)
+#' data("Network_mat")
+#' Val.Realise(Network_mat = Network_mat, Trait_means = Niches_vec)
 #'
 #' @export
 Val.Realise <- function(Network_mat,
