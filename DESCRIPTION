@@ -1,6 +1,6 @@
 Package: NetDemoSims
 Title: Spatially explicit, individual-based demographic simulations of species interacting within ecological networks
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: c(
     person("Erik", "Kusch", email = "erik.kusch@nhm.uio.no", role = c("aut", "cre", ""),
            comment = c(ORCID = "0000-0002-4984-7646")),
@@ -12,8 +12,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports: 
-    brms (>= 2.21.0),
-    igraph (>= 2.0.3),
     lubridate (>= 1.9.3),
     randcorr (>= 1.0),
     stringr

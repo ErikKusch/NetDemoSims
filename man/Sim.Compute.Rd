@@ -71,7 +71,7 @@ This function carries out spatially explicit, individual-based demographic simul
 \examples{
 data("Initialise_df")
 data("CarryingK_vec")
-data("Network_igraph")
+data("Network_mat")
 data("Env_mat")
 
 SimResult <- Sim.Compute(
@@ -89,7 +89,7 @@ SimResult <- Sim.Compute(
 
   # Interaction parameters
   interac.maxdis = 0.5,
-  interac.igraph = Network_igraph,
+  interac.mat = Network_mat,
   interac.scale = 1,
 
   # Simulation parameters

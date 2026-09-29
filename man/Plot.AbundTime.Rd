@@ -4,10 +4,14 @@
 \alias{Plot.AbundTime}
 \title{Plot Species Abundances Through Time}
 \usage{
-Plot.AbundTime(SimResult)
+Plot.AbundTime(SimResult, xlims = NULL, ylims = NULL)
 }
 \arguments{
 \item{SimResult}{A named list of data frames, one per recorded simulation timestep, each containing individuals alive at that timestep with a Species column. List names must be coercible to numeric simulation timestamps. Output of Sim.Compute().}
+
+\item{xlims}{Numeric vector of length 2 or NULL. Fixed X-axis limits. If NULL, limits are derived from the time series itself. Useful for keeping axes consistent across successive calls (e.g. for an animation).}
+
+\item{ylims}{Numeric vector of length 2 or NULL. Fixed Y-axis limits. If NULL, limits are derived from the time series itself. Useful for keeping axes consistent across successive calls (e.g. for an animation).}
 }
 \value{
 A ggplot object visualising the abundance of each species across simulation time as line plots.

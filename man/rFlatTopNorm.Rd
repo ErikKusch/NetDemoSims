@@ -34,5 +34,5 @@ rFlatTopNorm(5, mean = c(10, 12), sd = 3, range = 1, truncDist = 10)
 
 }
 \author{
-F. Guillaume Blanchet, Département de biologie, mathématiques et des sciences de la santé communautaire, Université de Sherbrooke, Canada.
+F. Guillaume Blanchet, Departement de biologie, mathematiques et des sciences de la sante communautaire, Universite de Sherbrooke, Canada.
 }

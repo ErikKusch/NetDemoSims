@@ -16,7 +16,7 @@
 #' 
 #' @return A two-column matrix with the sample from the distribution 
 #' 
-#' @author F. Guillaume Blanchet, Département de biologie, mathématiques et des sciences de la santé communautaire, Université de Sherbrooke, Canada. 
+#' @author F. Guillaume Blanchet, Departement de biologie, mathematiques et des sciences de la sante communautaire, Universite de Sherbrooke, Canada. 
 #' 
 #' @examples
 #' rFlatTopNorm(10)
