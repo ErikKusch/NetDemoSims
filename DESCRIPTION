@@ -1,17 +1,16 @@
-Package: NetSimVal
-Title: Network Simulation Inference Validation
-Version: 0.3.0
+Package: NetDemoSims
+Title: Spatially explicit, individual-based demographic simulations of species interacting within ecological networks
+Version: 0.4.0
 Authors@R: c(
     person("Erik", "Kusch", email = "erik.kusch@nhm.uio.no", role = c("aut", "cre", ""),
            comment = c(ORCID = "0000-0002-4984-7646")),
     person("Guillaume", "Blanchet", email = "f.guillaume.blanchet@usherbrooke.ca", role = c("aut"),
            comment = c(ORCID = "0000-0001-5149-2488"))
     )
-Description: R package for spatially explicit, individual-based demographic simulation for the generation of data products ready for network inference and validation of said inference.
+Description: R package for spatially explicit, individual-based demographic simulation of interacting species for the generation of data products ready for subsequent analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports: 
     brms (>= 2.21.0),
     igraph (>= 2.0.3),
@@ -21,3 +20,4 @@ Imports:
 Depends: 
     R (>= 3.5)
 LazyData: true
+Config/roxygen2/version: 8.1.0
