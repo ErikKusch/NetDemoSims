@@ -20,13 +20,14 @@
 #' @return An updated data frame of individuals and their dynamic death rates.
 #'
 Sim.d0Update <- function(
-    ID_df, which = "Initial", event = NULL,
-    env.xy,
-    d0 = 0.4, b0 = 0.6, sd = 2.5, beta = 1,
-    Effect_Mat,
-    k_vec,
-    Effect_Dis = 0.5,
-    seed) {
+  ID_df, which = "Initial", event = NULL,
+  env.xy,
+  d0 = 0.4, b0 = 0.6, sd = 2.5, beta = 1,
+  Effect_Mat,
+  k_vec,
+  Effect_Dis = 0.5,
+  seed
+) {
   # set.seed(seed)
 
   ## dynamic death rate functions
@@ -83,7 +84,7 @@ Sim.d0Update <- function(
     N_vec <- table(ID_df$Species)
     d0P_vec <- d0P(
       N = N_vec, b0 = b0, d0 = d0,
-      k = k_vec[match(names(k_vec), names(N_vec))]
+      k = na.omit(k_vec[match(names(k_vec), names(N_vec))])
     )
     ID_df$d0P <- as.numeric(d0P_vec[match(ID_df$Species, names(d0P_vec))])
     ### environment

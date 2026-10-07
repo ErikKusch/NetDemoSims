@@ -14,6 +14,7 @@
 #' @param interac.mat An matrix object with association/interaction strength stored as cell values. Output of Sim.Network().
 #' @param interac.maxdis Numeric. Distance within which neighbouring individuals interact with a focal individual.
 #' @param interac.scale Numeric. Scaling factor for strength of interaction effects on death rate.
+#' @param perturbs Named vector of numeric values. Magnitude of perturbations applied to the system during the simulation. Named values correspond to the simulation time from which point on perturbation is applied.
 #' @param Sim.t.max Numeric. Maximum simulation time.
 #' @param Sim.t.inter Numeric. Interval length at which to record simulation outputs (measured in simulation time).
 #' @param seed Numeric. Seed for random processes.
@@ -59,6 +60,32 @@
 #'   RunName = "Trial"
 #' )
 #'
+#' SimResult <- Sim.Compute(
+#'   # Demographic parameters
+#'   d0 = 0.4,
+#'   b0 = 0.6,
+#'   k_vec = CarryingK_vec[1:5],
+#'   ID_df = Initialise_df[Initialise_df$Sp %in% paste0("Sp_0", 1:5), ],
+#'   # Spatial parameters
+#'   env.xy = Env_mat,
+#'   env.sd = 1.5,
+#'   mig.sd = 0.25,
+#'   mig.top = 0.15,
+#'   # Perturbation parameters
+#'   perturbs = c("100" = 2, "150" = 2),
+#'   # Interaction parameters
+#'   interac.maxdis = 0,
+#'   interac.mat = Network_mat[1:5, 1:5],
+#'   interac.scale = 0,
+#'   # Simulation parameters
+#'   Sim.t.max = 200,
+#'   Sim.t.inter = 0.5,
+#'   seed = 42,
+#'   verbose = TRUE,
+#'   RunName = "Perturbations",
+#'   writeFile = FALSE
+#' )
+#' print(Plot.AbundTime(SimResult))
 #' @export
 Sim.Compute <- function(
   d0 = 0.4,
@@ -73,6 +100,7 @@ Sim.Compute <- function(
   interac.maxdis = 0.5,
   interac.mat,
   interac.scale = 1,
+  perturbs = NULL,
   Sim.t.max = 10,
   Sim.t.inter = 0.1,
   seed = 42,
@@ -101,6 +129,11 @@ Sim.Compute <- function(
   ## list object to store individuals at each time step
   ID_ls <- list(ID_df)
 
+  ## perturbs vector
+  if (is.null(perturbs)) {
+    perturbs <- c()
+  }
+
   ## setting start times
   t <- 0 # start time at 1
   names(ID_ls)[length(ID_ls)] <- t
@@ -112,6 +145,18 @@ Sim.Compute <- function(
   ## simulation loop over time steps
   while (t < Sim.t.max) {
     # if(verbose){print(t)}
+    if (any(t > as.numeric(names(perturbs)))) {
+      env.xy <- env.xy + perturbs[1]
+      perturbs <- perturbs[-1]
+      Sim.d0Update(
+        ID_df = ID_df, which = "Initial",
+        env.xy = env.xy, d0 = d0, b0 = b0, sd = env.sd,
+        Effect_Mat = interac.mat, k_vec = k_vec,
+        Effect_Dis = interac.maxdis, seed = seed,
+        beta = interac.scale
+      )
+    }
+
     ## vectors for storing birth and death probabilities for each individual
     birth_prob <- rep(b0, nrow(ID_df))
     death_prob <- ID_df$dt

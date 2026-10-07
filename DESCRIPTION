@@ -1,6 +1,6 @@
 Package: NetDemoSims
 Title: Spatially explicit, individual-based demographic simulations of species interacting within ecological networks
-Version: 0.4.1
+Version: 0.4.2
 Authors@R: c(
     person("Erik", "Kusch", email = "erik.kusch@nhm.uio.no", role = c("aut", "cre", ""),
            comment = c(ORCID = "0000-0002-4984-7646")),

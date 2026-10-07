@@ -17,6 +17,7 @@ Sim.Compute(
   interac.maxdis = 0.5,
   interac.mat,
   interac.scale = 1,
+  perturbs = NULL,
   Sim.t.max = 10,
   Sim.t.inter = 0.1,
   seed = 42,
@@ -49,6 +50,8 @@ Sim.Compute(
 \item{interac.mat}{An matrix object with association/interaction strength stored as cell values. Output of Sim.Network().}
 
 \item{interac.scale}{Numeric. Scaling factor for strength of interaction effects on death rate.}
+
+\item{perturbs}{Named vector of numeric values. Magnitude of perturbations applied to the system during the simulation. Named values correspond to the simulation time from which point on perturbation is applied.}
 
 \item{Sim.t.max}{Numeric. Maximum simulation time.}
 
@@ -100,6 +103,32 @@ SimResult <- Sim.Compute(
   RunName = "Trial"
 )
 
+SimResult <- Sim.Compute(
+  # Demographic parameters
+  d0 = 0.4,
+  b0 = 0.6,
+  k_vec = CarryingK_vec[1:5],
+  ID_df = Initialise_df[Initialise_df$Sp \%in\% paste0("Sp_0", 1:5), ],
+  # Spatial parameters
+  env.xy = Env_mat,
+  env.sd = 1.5,
+  mig.sd = 0.25,
+  mig.top = 0.15,
+  # Perturbation parameters
+  perturbs = c("100" = 2, "150" = 2),
+  # Interaction parameters
+  interac.maxdis = 0,
+  interac.mat = Network_mat[1:5, 1:5],
+  interac.scale = 0,
+  # Simulation parameters
+  Sim.t.max = 200,
+  Sim.t.inter = 0.5,
+  seed = 42,
+  verbose = TRUE,
+  RunName = "Perturbations",
+  writeFile = FALSE
+)
+print(Plot.AbundTime(SimResult))
 }
 \author{
 Erik Kusch, Natural History Museum, University of Oslo, Norway.
